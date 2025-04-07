@@ -426,7 +426,7 @@ img
 ### 2.5.1. Структура базового приложения "hello world"
 
 Для использования функций библиотек необходимо также реализовать основные приложения для host и sw_kernel частей. Рассмотрим примеры таких приложений, выполняющих базовые операции.
-Ниже приведен пример кода программы хост-подсистемы, выполняющей инициализацию и измерение тактовой частоты GPC (hello world). Код доступен по следующему адресу: <a href="https://latex.bmstu.ru/gitlab/hackathon/lab1/lab1" target="_blank">Леонард Эйлер, Пример 1</a>
+Ниже приведен пример кода программы хост-подсистемы, выполняющей инициализацию и измерение тактовой частоты GPC (hello world). Код доступен по следующему адресу: <a href="https://latex.bmstu.ru/gitlab/hackathon/ex1/ex1" target="_blank">Леонард Эйлер, Пример 1</a>
 
 ```c
 #include <stdlib.h>
@@ -723,12 +723,12 @@ void mq_send(unsigned int bufsize,char *buf) {
 
 Исходя из этого, обработка множеств или графов представляется в DISC наборе команд, как работа со структурами ключей и значений (key-value) в форматах  (uint128_t,uint64_t). Однако, как было показано ранее при описании набора команд  DISC, в отличие от общепринятых key-value хранилищ, доступны такие операции как ближайший больший (*NGR*), ближайший меньший (*NSM*), команды объединения множеств (*OR*) и ряд других. Это и позволяет использовать lnh64 в качестве устройства, хранящего большие множества (для графов это множества вершин и ребер).
 
-Благодаря возможности хранения 100-битных ключей возможно реализовать композитный ключ большего размера, добавляя в старшие 36 разрядов уникальный индекс. Благодаря этому микпропроцессор lnh64 может хранить ключи и значения, ограниченные лишь размером хранилища. В реальных задачах размер ограничивается разработчиком с помощью констант (по умолчанию установлен размер 512 байт). Пример кода, использующего эту возможность будет показан ниже в примере <a href="https://latex.bmstu.ru/gitlab/hackathon/lab9" target="_blank">Пример 4. Работа с длинными ключами и значениями</a>. 
+Благодаря возможности хранения 100-битных ключей возможно реализовать композитный ключ большего размера, добавляя в старшие 36 разрядов уникальный индекс. Благодаря этому микпропроцессор lnh64 может хранить ключи и значения, ограниченные лишь размером хранилища. В реальных задачах размер ограничивается разработчиком с помощью констант (по умолчанию установлен размер 512 байт). Пример кода, использующего эту возможность будет показан ниже в примере <a href="https://latex.bmstu.ru/gitlab/hackathon/ex4" target="_blank">Пример 4. Работа с длинными ключами и значениями</a>. 
 
 
 ### 2.6.1. Описание регистров микропроцессорного ядра SPE с набором команд дискретной математики DISC 
 
-Доступ к микропроцессору lnh64 (Structure Processing Element) осуществляется чтением и записью в пространство памяти микропроцессора riscv64im (Computing Processing Element) в диапазоне 0x300000 - 0x301000. Карта памяти представлена в файле <a href="https://latex.bmstu.ru/gitlab/lnh64_l0/sw-kernel-lib/-/blob/main/include/gpc_swk.h" target="_blank">gpc_swk.h</a>:
+Доступ к микропроцессору lnh64 (Structure Processing Element) осуществляется чтением и записью в пространство памяти микропроцессора riscv64im (Computing Processing Element) в диапазоне 0x300000 - 0x301000. Карта памяти представлена в файле <a href="https://latex.bmstu.ru/gitlab/lnh64_l0/sw-kernel-lib/-/blob/100bit/include/gpc_swk.h" target="_blank">gpc_swk.h</a>:
 
 Микропроцессор lnh64 получает на вход команды 6 различных форматов. Так, для команды вставки *INS* задействуются регистр кода операции, регистр ключа операнда и регистр значения операнда. Результатом выполнения команды является статус ее исполнения, который записывается в регистр статуса. Для команды поиска *SRCH* задействуются регистры ключа операнда и регистр кода операции, а результаты записываются в регистры ключа результата, значения результата и регистр статуса.
 
@@ -893,8 +893,6 @@ bool lnh_ins_sync(uint64_t str, uint128_t key, uint64_t value)
 }
 ```
 
-<!-- Тут закончил -->
-
 
 Функции для вызова команд DISC организованы в виде шести групп:
 
@@ -1000,11 +998,10 @@ bool lnh_ins_sync(uint64_t str, uint128_t key, uint64_t value)
 | &nbsp; &nbsp; &nbsp; &nbsp; lnh_grls_async(key_ls,key_gr,A,R)              |  Срез структуры A по условию "больше" ключа key_ls и "меньше" ключа key_gr. Помещение результирующей структуры в R. (все ключи, не соответствующие условию gr и ls в структуре R отсуствуют).  |  
 
 
-Полный перечень функций вызовов команд DISC вы можете посмотреть в файле <a href="https://latex.bmstu.ru/gitlab/lnh64_l0/sw-kernel-lib/-/blob/main/include/lnh64.h" target="_blank">lnh64.h</a>.
+Полный перечень функций вызовов команд DISC вы можете посмотреть в файле <a href="https://latex.bmstu.ru/gitlab/lnh64_l0/sw-kernel-lib/-/blob/100bit/include/lnh64.h" target="_blank">lnh64.h</a>.
 
 
 ```c
-
 //==================================
 // Функции для работы с Leonhard API
 //==================================
@@ -1012,12 +1009,6 @@ bool lnh_ins_sync(uint64_t str, uint128_t key, uint64_t value)
 void                            lnh_hw_reset();
 void                            lnh_sw_reset();
 void                            lnh_init();
-uint64_t                        lnh_rd_reg64(int adr);
-uint32_t                        lnh_rd_reg32(int adr);
-void                            lnh_fast_recall(uint32_t key);
-void                            lnh_fast_recall(uint32_t key, uint32_t value);
-void                            lnh_fast_recall(uint64_t key);
-void                            lnh_fast_recall(uint64_t key, uint64_t value);
 
 //================================
 // Сервисные функции  Leonhard API
@@ -1034,26 +1025,27 @@ void                            lnh_syncm(int mbr);
 // Синхронные функции Leonhard API
 //================================
 
-bool                            lnh_ins_sync(uint64_t str, uint64_t key, uint64_t value);
-bool                            lnh_del_sync(uint64_t str, uint64_t key);
+//64 bit
+bool                            lnh_ins_sync(uint64_t str, uint128_t key, uint64_t value);
+bool                            lnh_del_sync(uint64_t str, uint128_t key);
 uint32_t                        lnh_get_num(uint64_t str);
 bool                            lnh_del_str_sync(uint64_t str);
 bool                            lnh_sq_sync(uint64_t str);
 bool                            lnh_or_sync(uint64_t A, uint64_t B, uint64_t R);
 bool                            lnh_and_sync(uint64_t A, uint64_t B, uint64_t R);
 bool                            lnh_not_sync(uint64_t A, uint64_t B, uint64_t R);
-bool                            lnh_lseq_sync(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_ls_sync(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_greq_sync(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_gr_sync(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_grls_sync(uint64_t key_ls, uint64_t key_gr, uint64_t A, uint64_t R);
-bool                            lnh_search(uint64_t str, uint64_t key);
-bool                            lnh_next(uint64_t str, uint64_t key);
-bool                            lnh_prev(uint64_t str, uint64_t key);
-bool                            lnh_nsm(uint64_t str, uint64_t key);
-bool                            lnh_ngr(uint64_t str, uint64_t key);
-bool                            lnh_nsm_signed(uint64_t str, long long int key);
-bool                            lnh_ngr_signed(uint64_t str, long long int key);
+bool                            lnh_lseq_sync(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_ls_sync(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_greq_sync(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_gr_sync(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_grls_sync(uint128_t key_ls, uint128_t key_gr, uint64_t A, uint64_t R);
+bool                            lnh_search(uint64_t str, uint128_t key);
+bool                            lnh_next(uint64_t str, uint128_t key);
+bool                            lnh_prev(uint64_t str, uint128_t key);
+bool                            lnh_nsm(uint64_t str, uint128_t key);
+bool                            lnh_ngr(uint64_t str, uint128_t key);
+bool                            lnh_nsm_signed(uint64_t str, int128_t key);
+bool                            lnh_ngr_signed(uint64_t str, int128_t key);
 bool                            lnh_get_first(uint64_t str);
 bool                            lnh_get_last(uint64_t str);
 bool                            lnh_get_first_signed(uint64_t str);
@@ -1064,24 +1056,24 @@ bool                            lnh_get_last_signed(uint64_t str);
 // Синхронные функции Leonhard API с записью в очередь результатов
 //================================================================
 
-bool                            lnh_ins_syncq(uint64_t str, uint64_t key, uint64_t value);
-bool                            lnh_del_syncq(uint64_t str, uint64_t key);
+bool                            lnh_ins_syncq(uint64_t str, uint128_t key, uint64_t value);
+bool                            lnh_del_syncq(uint64_t str, uint128_t key);
 uint32_t                        lnh_get_numq(uint64_t str);
 bool                            lnh_del_str_syncq(uint64_t str);
 bool                            lnh_sq_syncq(uint64_t str);
 bool                            lnh_or_syncq(uint64_t A, uint64_t B, uint64_t R);
 bool                            lnh_and_syncq(uint64_t A, uint64_t B, uint64_t R);
 bool                            lnh_not_syncq(uint64_t A, uint64_t B, uint64_t R);
-bool                            lnh_lseq_syncq(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_ls_syncq(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_greq_syncq(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_gr_syncq(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_grls_syncq(uint64_t key_ls, uint64_t key_gr, uint64_t A, uint64_t R);
-bool                            lnh_searchq(uint64_t str, uint64_t key);
-bool                            lnh_nextq(uint64_t str, uint64_t key);
-bool                            lnh_prevq(uint64_t str, uint64_t key);
-bool                            lnh_nsmq(uint64_t str, uint64_t key);
-bool                            lnh_ngrq(uint64_t str, uint64_t key);
+bool                            lnh_lseq_syncq(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_ls_syncq(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_greq_syncq(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_gr_syncq(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_grls_syncq(uint128_t key_ls, uint128_t key_gr, uint64_t A, uint64_t R);
+bool                            lnh_searchq(uint64_t str, uint128_t key);
+bool                            lnh_nextq(uint64_t str, uint128_t key);
+bool                            lnh_prevq(uint64_t str, uint128_t key);
+bool                            lnh_nsmq(uint64_t str, uint128_t key);
+bool                            lnh_ngrq(uint64_t str, uint128_t key);
 bool                            lnh_get_firstq(uint64_t str);
 bool                            lnh_get_lastq(uint64_t str);
 bool                            lnh_get_q();
@@ -1091,24 +1083,24 @@ bool                            lnh_get_q();
 // Асинхронные функции Leonhard API с записью в асинхронный Mailbox
 //=================================================================
 
-bool                            lnh_ins_syncm(int st_mreg, uint64_t str, uint64_t key, uint64_t value);
-bool                            lnh_del_syncm(int st_mreg, uint64_t str, uint64_t key);
+bool                            lnh_ins_syncm(int st_mreg, uint64_t str, uint128_t key, uint64_t value);
+bool                            lnh_del_syncm(int st_mreg, uint64_t str, uint128_t key);
 uint32_t                        lnh_get_numm(uint64_t str);
 bool                            lnh_del_str_syncm(int st_mreg, uint64_t str);
 bool                            lnh_sq_syncm(int st_mreg, uint64_t str);
 bool                            lnh_or_syncm(int st_mreg, uint64_t A, uint64_t B, uint64_t R);
 bool                            lnh_and_syncm(int st_mreg, uint64_t A, uint64_t B, uint64_t R);
 bool                            lnh_not_syncm(int st_mreg, uint64_t A, uint64_t B, uint64_t R);
-bool                            lnh_lseq_syncm(int st_mreg, uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_ls_syncm(int st_mreg, uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_greq_syncm(int st_mreg, uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_gr_syncm(int st_mreg, uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_grls_syncm(int st_mreg, uint64_t key_ls, uint64_t key_gr, uint64_t A, uint64_t R);
-bool                            lnh_searchm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint64_t key);
-bool                            lnh_nextm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint64_t key);
-bool                            lnh_prevm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint64_t key);
-bool                            lnh_nsmm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint64_t key);
-bool                            lnh_ngrm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint64_t key);
+bool                            lnh_lseq_syncm(int st_mreg, uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_ls_syncm(int st_mreg, uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_greq_syncm(int st_mreg, uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_gr_syncm(int st_mreg, uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_grls_syncm(int st_mreg, uint128_t key_ls, uint128_t key_gr, uint64_t A, uint64_t R);
+bool                            lnh_searchm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint128_t key);
+bool                            lnh_nextm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint128_t key);
+bool                            lnh_prevm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint128_t key);
+bool                            lnh_nsmm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint128_t key);
+bool                            lnh_ngrm(int key_mreg, int val_mreg, int st_mreg, uint64_t str, uint128_t key);
 bool                            lnh_get_firstm(int key_mreg, int val_mreg, int st_mreg, uint64_t str);
 bool                            lnh_get_lastm(int key_mreg, int val_mreg, int st_mreg, uint64_t str);
 uint64_t                        lnh_get_m(int mreg);
@@ -1117,18 +1109,18 @@ uint64_t                        lnh_get_m(int mreg);
 //========================================================
 // Асинхронные функции Leonhard API без записи результатов
 //========================================================
-bool                            lnh_ins_async(uint64_t str, uint64_t key, uint64_t value);
-bool                            lnh_del_async(uint64_t str, uint64_t key);
+bool                            lnh_ins_async(uint64_t str, uint128_t key, uint64_t value);
+bool                            lnh_del_async(uint64_t str, uint128_t key);
 bool                            lnh_del_str_async(uint64_t str);
 bool                            lnh_sq_async(uint64_t str);
 bool                            lnh_or_async(uint64_t A, uint64_t B, uint64_t R);
 bool                            lnh_and_async(uint64_t A, uint64_t B, uint64_t R);
 bool                            lnh_not_async(uint64_t A, uint64_t B, uint64_t R);
-bool                            lnh_lseq_async(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_ls_async(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_greq_async(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_gr_async(uint64_t key, uint64_t A, uint64_t R);
-bool                            lnh_grls_async(uint64_t key_ls, uint64_t key_gr, uint64_t A, uint64_t R);
+bool                            lnh_lseq_async(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_ls_async(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_greq_async(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_gr_async(uint128_t key, uint64_t A, uint64_t R);
+bool                            lnh_grls_async(uint128_t key_ls, uint128_t key_gr, uint64_t A, uint64_t R);
 
 ```
 
@@ -1151,35 +1143,33 @@ SPE lnh64 использует беззнаковое сравнение 64 би
 
  //Структура A - ключ
 	/* 
-	 * key[63..32] -  Поле 0 - Идентификатор (id)
-	 * key[31..0]  -  Поле 1 - Порядковый номер (index)
+	 * key[47..0]  -  Поле 0 - Порядковый номер (index)
+	 * key[99..48] -  Поле 1 - Идентификатор (id)
 	 */
- STRUCT(A_key)
+ STRUCT128(A_key)
  {
-        uint32_t	index:32;	//Поле 0: 
-        uint32_t	id   :32; 	//Поле 1: 
+        uint64_t	index:48;	//Поле 0: 
+        uint64_t	id   :52; 	//Поле 1:
+        uint32_t    nu;         //Не используется 
  };
 
 //Структура A - значение
 	/* 
-	 * value[63..32] -  Поле 0 - Атрибут 0 
-	 * value[31..24] -  Поле 1 - Атрибут 1 
-	 * value[23..8]  -  Поле 2 - Атрибут 2 
-	 * value[7..0]   -  Поле 3 - Атрибут 3
+	 * value[7..0]   -  Поле 0 - Атрибут 0
+	 * value[23..8]  -  Поле 1 - Атрибут 1 
+	 * value[31..24] -  Поле 2 - Атрибут 2 
+	 * value[63..32] -  Поле 3 - Атрибут 3 
 	 */
- STRUCT(A_value)
+ STRUCT64(A_value)
  {
  		// Поля объявляются в обратной последовательности (старший байт расположен по старшему адресу)
-        uint8_t      atr3   :8;  //Поле 3: Атрибут 3
-        uint16_t     atr2   :16; //Поле 2: Атрибут 2
-        uint8_t      atr1   :8;  //Поле 1: Атрибут 1
         uint32_t     atr0   :32; //Поле 0: Атрибут 0
+        uint8_t      atr1   :8;  //Поле 1: Атрибут 1
+        uint16_t     atr2   :16; //Поле 2: Атрибут 2
+        uint8_t      atr3   :8;  //Поле 3: Атрибут 3
  };
 
 ```
-
-
-
 
 <!-- Далее, объявлены макросы INLINE инстанцирования структур и обращения к объединению:
 
@@ -1189,7 +1179,7 @@ SPE lnh64 использует беззнаковое сравнение 64 би
  #define INLINE(type,...) (((type){__VA_ARGS__}).bits)
 ```
 
- Макрос STRUCT(name) использует шаблонную структуру \_base\_uint64\_t, которая объявлена в заголовочном файле <a href="https://latex.bmstu.ru/gitlab/lnh64_l0/sw-kernel-lib/-/blob/main/include/compose_keys.hxx" target="_blank">compose_keys.hxx</a>. Структура типа \_base\_uint64\_t должна занимать в памяти ровно 8 байт, в следствие чего она может быть интерпретирована, как значение стандартного типа uint64_t (т.е. unsigned long long int). С другой стороны, доступ к ней может осуществляться с использованием типа, передаваемого в качестве параметра. 
+ Макрос STRUCT(name) использует шаблонную структуру \_base\_uint64\_t, которая объявлена в заголовочном файле <a href="https://latex.bmstu.ru/gitlab/lnh64_l0/sw-kernel-lib/-/blob/100bit/include/compose_keys.hxx" target="_blank">compose_keys.hxx</a>. Структура типа \_base\_uint64\_t должна занимать в памяти ровно 8 байт, в следствие чего она может быть интерпретирована, как значение стандартного типа uint64_t (т.е. unsigned long long int). С другой стороны, доступ к ней может осуществляться с использованием типа, передаваемого в качестве параметра. 
 
  > Все поля структуры типа \_base\_uint64\_t размещяются в регистрах процессора.
 
@@ -1208,7 +1198,7 @@ SPE lnh64 использует беззнаковое сравнение 64 би
  lnh_ins_async(A,INLINE(A_key,{.id=atr0,.index=0}),INLINE(A_value,{.atr0=0x1234,.atr1=0,.atr2=0,.atr3=0,}));  
 ```
 
-<!-- Подробный пример представлен в проекте <a href="https://gitlab.com/leonhard-x64-xrt-v2/btwc-example/btwc-dijkstra-xrt/-/blob/main/dijkstra.c" target="_blank">dijkstra.c</a>. 
+<!-- Подробный пример представлен в проекте <a href="https://gitlab.com/leonhard-x64-xrt-v2/btwc-example/btwc-dijkstra-xrt/-/blob/100bit/dijkstra.c" target="_blank">dijkstra.c</a>. 
 -->
 
 ## 2.7. Программная модель микропроцессора Леонард Эйлер
@@ -1360,8 +1350,10 @@ SPE lnh64 использует беззнаковое сравнение 64 би
 void update() {
 
         while(1){
-                users::key key=users::key::from_int(mq_receive());
-                if (key==-1ull) break;
+                users::key key=users::key::from_int(mq_receive128());
+                if (key==-1_ull128) {
+                        break;
+                }
                 users::val val=users::val::from_int(mq_receive());
                 // Поля структуры могут записываться явно следующим образом 
                 //      auto new_key = users::key{.rec_idx=1,.user=2};
@@ -1369,7 +1361,7 @@ void update() {
                 // Копирование полей в переменные можно выполнить следующим образом:
                 //      auto user = key.user;
                 //      auto [lst_time,role] = val;
-                USERS.ins_async(key,val); //Вставка в таблицу с типизацией uint64_t
+                USERS.ins_async(key,val); //Вставка в таблицу
         } 
 }
 ```
@@ -1377,26 +1369,29 @@ void update() {
 
 1. Последовательная пересылка ключей и значений unsigned long long короткими сообщениями.
 ```c
-    for (uint32_t user=0;user<TEST_USER_COUNT;user++) {
-		for (uint32_t idx=0;idx<TEST_ROLE_COUNT;idx++,offs+=2) {
-			gpc64_inst->mq_send(users::key{.idx=idx,.user=user}); //запись о роли #idx
-			gpc64_inst->mq_send(users::val{.role=idx,.time=time_t(0)}); //роль и время доступа
-		}
-    }
+        //1-й вариант: пересылка коротких сообщений
+        for (uint32_t user=0;user<TEST_USER_COUNT;user++) {
+                for (uint32_t idx=0;idx<TEST_ROLE_COUNT;idx++) {
+                        gpc64_inst->mq_send128(users::key{.idx=idx,.user=user}); //запись о роли #idx
+                        gpc64_inst->mq_send(users::val{.role=idx,.time=time_t(idx*3600)}); //роль и время доступа
+                }
+        }
 ```
 
 2. Заполнение буфера данных и передача его драйверу (блочная передача). Данный способ обеспечивает большую пропускную способность передачи, так как реализуется через механизм прямого доступа к памяти. Передача данных из буфера выполняется в асинхронном режиме (процесс запускается по команде `mq_send`). Для ожидания момента завершения передачи метод `mq_send` возвращает указатель на поток передачи. Далее, если требуется ожидание завершения процесса передачи, необходимо использовать синхронизирующую команду `join` (send_buf_th->join()). Пример кода блочной передачи приведен ниже: 
 ```c
-	unsigned long long *buf = (unsigned long long*)malloc(sizeof(unsigned long long)*TEST_USER_COUNT*TEST_ROLE_COUNT*2);
-	for (uint32_t user=0,offs=0;user<TEST_USER_COUNT;user++) {
-		for (uint32_t idx=0;idx<TEST_ROLE_COUNT;idx++,offs+=2) {
-			buf[offs]=users::key{.idx=idx,.user=user};
-			buf[offs+1]=users::val{.role=idx,.time=time_t(idx*3600)};
-		}
-	}
-	auto send_buf_th = gpc64_inst->mq_send(sizeof(unsigned long long)*TEST_USER_COUNT*TEST_ROLE_COUNT*2,(char*)buf);
-	send_buf_th->join();
-	free(buf);
+        //2-й вариант: блочная передача
+        unsigned long long *buf = (unsigned long long*)malloc(sizeof(unsigned long long)*TEST_USER_COUNT*TEST_ROLE_COUNT*3);
+        for (uint32_t user=0,offs=0;user<TEST_USER_COUNT;user++) {
+                for (uint32_t idx=0;idx<TEST_ROLE_COUNT;idx++,offs+=3) {
+                        buf[offs]=uint128_c(users::key{.idx=idx,.user=user}).lo;
+                        buf[offs+1]=uint128_c(users::key{.idx=idx,.user=user}).hi;
+                        buf[offs+2]=users::val{.role=idx,.time=time_t(idx*3600)};
+                }
+        }
+        auto send_buf_th = gpc64_inst->mq_send(sizeof(unsigned long long)*TEST_USER_COUNT*TEST_ROLE_COUNT*3,(char*)buf);
+        send_buf_th->join();
+        free(buf);
  ```
 
 * По завершению передачи посылается терминальный символ (`0xffffffffffffffff`):
@@ -1408,21 +1403,22 @@ void update() {
 
 * В ответ на терминальный символ `sw_kernel` завершает обработчик `update`, и код хост-подсистемы запускает обработчик запросов поиска `select`.
 * Система готова к приему запросов пользователя. Формат таблицы, представленной в SPE микропроцессоре следующий
-<a href="https://latex.bmstu.ru/gitlab/hackathon2023/lab2/lab2/-/blob/main/include/common_struct.h?ref_type=heads#L55" target="_blank">common.sh</a>
+<a href="https://latex.bmstu.ru/gitlab/hackathon/ex2/ex2/-/blob/100bit/include/common_struct.h?ref_type=heads#L55" target="_blank">common.sh</a>
 
 ```c
 	//Запись для формирования ключей (* - наиболее значимые биты поля)
-	STRUCT(key)
+	STRUCT128(key)
 	{
-	    uint32_t	idx	    :idx_bits;	//Поле 0:
-	    uint32_t	user    :32; 		//Поле 1*
+	    uint32_t	idx	            :idx_bits;	//Поле 0
+	    uint32_t	user            :32; 		//Поле 1
+	    uint64_t	nu              :64 = 0ull; //Не используется (старшая часть)*
 	};
 
 	//Запись для формирования значений
-	STRUCT(val)
+	STRUCT64(val)
 	{
-	    uint32_t	role	:32;		//Поле 0:
-	    time_t		time    :32; 		//Поле 1*
+	    uint32_t	role	        :32;		//Поле 0:
+	    time_t		time            :32; 		//Поле 1*
 	};
 ```
 
@@ -1451,14 +1447,12 @@ select role from users where user=5 and time>100000;
 Полный код приложения для хост-подсистемы показан ниже:
 
 ```c
-
 #define TEST_USER_COUNT 1000
 #define TEST_ROLE_COUNT 1000
 
 int main(int argc, char** argv)
 {
 	ofstream log("lab2.log"); //поток вывода сообщений
-	unsigned long long offs=0ull;
 	gpc *gpc64_inst; //указатель на класс gpc
 	regex select_regex_query("select +(.*?) +from +(.*?) +where +(.*?)=(.*?) +and +(.*?)>(.*);", //запрос
             std::regex_constants::ECMAScript | std::regex_constants::icase);
@@ -1485,27 +1479,30 @@ int main(int argc, char** argv)
 
 	//1-й вариант: пересылка коротких сообщений
 	for (uint32_t user=0;user<TEST_USER_COUNT;user++) {
-		for (uint32_t idx=0;idx<TEST_ROLE_COUNT;idx++,offs+=2) {
-			gpc64_inst->mq_send(users::key{.idx=idx,.user=user}); //запись о роли #idx
-			gpc64_inst->mq_send(users::val{.role=idx,.time=time_t(0)}); //роль и время доступа
+		for (uint32_t idx=0;idx<TEST_ROLE_COUNT;idx++) {
+			gpc64_inst->mq_send128(users::key{.idx=idx,.user=user}); //запись о роли #idx
+			gpc64_inst->mq_send(users::val{.role=idx,.time=time_t(idx*3600)}); //роль и время доступа
 		}
 	}
 
 	//2-й вариант: блочная передача
-	unsigned long long *buf = (unsigned long long*)malloc(sizeof(unsigned long long)*TEST_USER_COUNT*TEST_ROLE_COUNT*2);
+	unsigned long long *buf = (unsigned long long*)malloc(sizeof(unsigned long long)*TEST_USER_COUNT*TEST_ROLE_COUNT*3);
 	for (uint32_t user=0,offs=0;user<TEST_USER_COUNT;user++) {
-		for (uint32_t idx=0;idx<TEST_ROLE_COUNT;idx++,offs+=2) {
-			buf[offs]=users::key{.idx=idx,.user=user};
-			buf[offs+1]=users::val{.role=idx,.time=time_t(idx*3600)};
+		for (uint32_t idx=0;idx<TEST_ROLE_COUNT;idx++,offs+=3) {
+			buf[offs]=uint128_c(users::key{.idx=idx,.user=user}).lo;
+			buf[offs+1]=uint128_c(users::key{.idx=idx,.user=user}).hi;
+			buf[offs+2]=users::val{.role=idx,.time=time_t(idx*3600)};
 		}
 	}
-	auto send_buf_th = gpc64_inst->mq_send(sizeof(unsigned long long)*TEST_USER_COUNT*TEST_ROLE_COUNT*2,(char*)buf);
+	auto send_buf_th = gpc64_inst->mq_send(sizeof(unsigned long long)*TEST_USER_COUNT*TEST_ROLE_COUNT*3,(char*)buf);
 	send_buf_th->join();
 	free(buf);
+
 	//Терминальный символ
-	gpc64_inst->mq_send(-1ull);
+	gpc64_inst->mq_send128(uint128_c(-1ull,-1ull));
 
 	gpc64_inst->start(__event__(select)); //обработчик запроса поиска 
+
 	while(1) {
 		string query1;
 		//разбор полей запроса
@@ -1526,7 +1523,7 @@ int main(int argc, char** argv)
 			//match_query1[5] - поле поиска 2
 			//match_query1[6] - значение поля поиска 2
 			log << "Запрос принят в обработку." << endl;
-			log << "Поиск ролей пользователя " << match_query1[4] << "и time > " << time_t(stoi(match_query1[6])) << endl;
+			log << "Поиск ролей пользователя " << match_query1[4] << " и time > " << time_t(stoi(match_query1[6])) << endl;
 			gpc64_inst->mq_send(stoi(match_query1[4])); //пользователь
 			gpc64_inst->mq_send(stoi(match_query1[6])); //время доступа
 			while (1) {
@@ -1562,18 +1559,15 @@ int main(void) {
     for (;;) {
         //Wait for event
         event_source = wait_event();
-        set_gpc_state(BUSY);
         switch(event_source) {
-            /////////////////////////////////////////////
-            //  Measure GPN operation frequency
-            /////////////////////////////////////////////
             case __event__(update) : update(); break;
             case __event__(select) : select(); break;
         }
-        set_gpc_state(IDLE);
+        set_gpc_state(READY);
     }
 }
-    
+
+   
 //-------------------------------------------------------------
 //      Вставка ключа и значения в структуру
 //-------------------------------------------------------------
@@ -1581,8 +1575,10 @@ int main(void) {
 void update() {
 
         while(1){
-                users::key key=users::key::from_int(mq_receive());
-                if (key==-1ull) break;
+                users::key key=users::key::from_int(mq_receive128());
+                if (key==-1_ull128) {
+                        break;
+                }
                 users::val val=users::val::from_int(mq_receive());
                 // Поля структуры могут записываться явно следующим образом 
                 //      auto new_key = users::key{.rec_idx=1,.user=2};
@@ -1590,7 +1586,7 @@ void update() {
                 // Копирование полей в переменные можно выполнить следующим образом:
                 //      auto user = key.user;
                 //      auto [lst_time,role] = val;
-                USERS.ins_async(key,val); //Вставка в таблицу с типизацией uint64_t
+                USERS.ins_async(key,val); //Вставка в таблицу
         } 
 }
 
@@ -1598,8 +1594,9 @@ void update() {
 //-------------------------------------------------------------
 //      Передать все роли пользователя и время доступа 
 //-------------------------------------------------------------
- 
+
 void select() {
+
         while(1){
                 uint32_t quser = mq_receive();
                 if (quser==-1) break;
@@ -1612,17 +1609,18 @@ void select() {
                 //Вариант 1 - обход записей пользователя явным образом
                 auto crole = USERS.nsm(users::key{.idx=users::idx_min,.user=quser});
                 while (crole && crole.key().user==quser) {
-                        if (crole.value().time>qtime) mq_send(crole.value());  
-                        crole = USERS.nsm(crole.key());
-                } 
+                       if (crole.value().time>qtime) mq_send(crole.value());
+                       crole = USERS.nsm(crole.key());
+                }
 
                 //Вариант 2 - использование итератора
-                for (users::val val : role_range(USERS,quser)) {
-                        if (val.time>qtime) mq_send(val);
-                }
-                mq_send_flush(-1ull);
-        } 
+                // for (auto val : role_range(USERS,quser)) {
+                //        if (val.time>qtime) mq_send(val);
+                // }
+                mq_send(-1ull);
+        }
 }
+
 ```
 
 ## 3.2. Подключение к облачной платформе Тераграф Cloud 
@@ -1750,8 +1748,8 @@ user@dl580:~$ lnh_nfo
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon2023/lab1/lab1.git
-cd lab1
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex1/ex1.git
+cd ex1
 ```
 
 Для стандартного пользователя ВМ студенческой команды хакатона все необходимые переменные окружения установлены по-умолчанию.
@@ -1801,8 +1799,8 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon2023/lab2/lab2.git
-cd lab2
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex2/ex2.git
+cd ex2
 ```
 
 Для сборки проекта следует выполнить команду:
@@ -1860,8 +1858,8 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon2023/lab3.git
-cd lab3
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex3.git
+cd ex3
 ```
 
 Для стандартного пользователя ВМ студенческой команды хакатона все необходимые переменные окружения установлены по-умолчанию.
@@ -2067,9 +2065,55 @@ host/host_main sw-kernel/sw_kernel.rawbinary
 make clean
 ```
 
+## 3.7. Запуск демо проекта 4 
 
+Пример демонстрирует работу с объектами MessageProcessor в обоих микропроцессорах: микропроцессоре хост-подсистемы (x86) и ускорительной карте (riscv64). Создаются объекты process1 для взаимодействия, и передаются длинные ключи и значения (структуры описаны в файле common_struct.h в папке include). Переданный ключ изменяется в программном ядре и посылается обратно.
 
-## 3.7. Индивидуальные задания 
+Для установки требуется рекурсивно клонировать репозиторий:
+
+```bash
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex4.git
+cd ex4
+```
+
+Для сборки проекта следует выполнить команду:
+
+```bash
+make
+```
+
+Результатом выполнения команды станет файлы host_main, sw_kernel_main.rawbinary в директориях ./host/ и ./sw_kernel/.
+
+Для запуска проекта
+
+Параметры запуска проекта:
+
+host_main <путь к файлу sw_kernel>
+
+Например:
+
+```bash
+host/host_main sw-kernel/sw_kernel.rawbinary
+```
+
+Результат работы теста:
+
+```bash
+1,2,**100**,4,77
+10,20,30,40
+abcdefghijklmnop
+1234567890abcdef
+```
+
+Пример демонстрирует, как посланный ключ большой размерности может быть сохранен в lnh64, и найден в нем с помощью команды nsm. При этом код sw_kernel меняет поле на значение 100, что демонстрируется в консольном выводе.
+
+Очистка проекта выполняется следующим образом:
+
+```bash
+make clean
+```
+
+## 3.8. Индивидуальные задания 
 
 Разработать программу для хост-подсистемы и обработчики программного ядра, выполняющие следующие действия:
 
@@ -2089,9 +2133,6 @@ make clean
 -   **courses**: course\_id, title, student\_ids (список идентификаторов
     студентов, записанных на курс).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2138,9 +2179,6 @@ FOR studentId IN course.student\_ids\
 -   **professors**: professor\_id, name, department\_id.
 -   **departments**: department\_id, department\_name.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2186,9 +2224,6 @@ FOR dept IN departments\
 -   **students**: student\_id, name, age.
 -   **enrollments**: enrollment\_id, student\_id, course\_id, grade.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2233,9 +2268,6 @@ FOR enr IN enrollments\
 -   **books**: book\_id, title, author, borrower\_id.
 -   **borrowers**: borrower\_id, name, student\_id.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2280,9 +2312,6 @@ FOR borrower IN borrowers\
     клубов).
 -   **clubs**: club\_id, club\_name.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2330,9 +2359,6 @@ FOR student IN students\
 -   **courses**: course\_id, title, department\_id.
 -   **departments**: department\_id, department\_name.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2376,9 +2402,6 @@ FOR dept IN departments\
 -   **students**: student\_id, name, gpa.
 -   **scholarships**: scholarship\_id, name, min\_gpa.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2423,9 +2446,6 @@ FOR student IN students\
 -   **attendance**: attendance\_id, student\_id, date, status (например,
     Present или Absent).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2471,9 +2491,6 @@ FOR student IN students\
 -   **students**: student\_id, name, major.
 -   **internships**: internship\_id, company, required\_major.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2517,9 +2534,6 @@ FOR student IN students\
 -   **students**: student\_id, name.
 -   **payments**: payment\_id, student\_id, amount, date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2568,9 +2582,6 @@ RETURN { "name": student.name, "totalPayments": totalAmount }
 -   **students**: student\_id, name, advisor\_id.
 -   **advisors**: advisor\_id, name, department.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2662,9 +2673,6 @@ student.graduation\_year\
 -   **students**: student\_id, name.
 -   **alumni**: alumni\_id, student\_id, current\_company, position.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2711,9 +2719,6 @@ FOR student IN students\
 -   **projects**: project\_id, title, student\_ids (список
     идентификаторов студентов).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2757,9 +2762,6 @@ FOR student IN students\
 -   **exchange\_programs**: program\_id, country, university,
     duration\_months.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2805,9 +2807,6 @@ FOR student IN students\
 -   **students**: student\_id, name, major.
 -   **tutors**: tutor\_id, name, majors (список специальностей).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2849,9 +2848,6 @@ FOR student IN students\
 -   **students**: student\_id, name.
 -   **disciplinary\_actions**: action\_id, student\_id, action, date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2897,9 +2893,6 @@ FOR student IN students\
 -   **health\_records**: record\_id, student\_id, vaccination\_status,
     notes.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2939,9 +2932,6 @@ record.vaccination\_status == "Not Vaccinated"\
 -   **students**: student\_id, name, year\_of\_study.
 -   **mentorships**: mentorship\_id, mentor\_id, mentee\_id.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -2985,9 +2975,6 @@ FOR student IN students\
 -   **attendance**: attendance\_id, student\_id, course\_id,
     attendance\_percentage.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3033,9 +3020,6 @@ FOR att IN attendance\
 -   **online\_courses**: course\_id, title, required\_courses (список
     курсов-пререквизитов).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3089,9 +3073,6 @@ FOR student IN students\
 -   **job\_openings**: job\_id, title, required\_skills (список
     требуемых навыков).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3144,9 +3125,6 @@ FOR student IN students\
 -   **students**: student\_id, name.
 -   **library\_loans**: loan\_id, student\_id, book\_title, due\_date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3194,9 +3172,6 @@ FOR student IN students\
 -   **students**: student\_id, name, city.
 -   **companies**: company\_id, name, city.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3236,9 +3211,6 @@ FOR student IN students\
 -   **students**: student\_id, name.
 -   **exam\_results**: exam\_id, student\_id, subject, score.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3290,9 +3262,6 @@ FOR student IN students\
 -   **housing\_applications**: application\_id, student\_id, dormitory,
     status.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3339,9 +3308,6 @@ FOR student IN students\
 -   **meal\_plans**: plan\_id, student\_id, plan\_type, start\_date,
     end\_date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3392,9 +3358,6 @@ FOR student IN students\
 -   **extracurricular\_activities**: activity\_id, name, participants
     (список student\_id).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3437,9 +3400,6 @@ FOR student IN students\
 -   **email\_subscriptions**: subscription\_id, email,
     subscription\_type.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3494,9 +3454,6 @@ FOR student IN students\
 -   **students**: student\_id, name, preferred\_language.
 -   **language\_courses**: course\_id, language, level.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3541,9 +3498,6 @@ course.level == "Beginner".
 -   **students**: student\_id, name, birthdate.
 -   **events**: event\_id, name, date, type.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3590,9 +3544,6 @@ DATE\_FORMAT(event.date, "%m-%d") == birthDate — совпадает день �
 -   **students**: student\_id, name, enrollment\_year.
 -   **yearly\_fees**: year, amount.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3647,9 +3598,6 @@ FOR student IN students\
 -   **study\_abroad\_programs**: program\_id, country, majors (список
     специальностей), duration\_months.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3701,9 +3649,6 @@ FOR student IN students\
 -   **course\_materials**: material\_id, course\_id, year\_available,
     title.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3748,9 +3693,6 @@ FOR student IN students\
 -   **notifications**: notification\_id, recipient\_email, message,
     sent\_date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3794,9 +3736,6 @@ FOR student IN students\
 -   **students**: student\_id, name.
 -   **volunteer\_hours**: record\_id, student\_id, hours, date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3851,9 +3790,6 @@ FOR student IN students\
 -   **cafeterias**: cafeteria\_id, name, cuisines (список предлагаемых
     кухонь).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3896,9 +3832,6 @@ FOR student IN students\
 -   **students**: student\_id, name.
 -   **student\_accounts**: account\_id, student\_id, balance.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3941,9 +3874,6 @@ FOR account IN student\_accounts\
     занятий).
 -   **classes**: class\_id, title, time.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -3989,9 +3919,6 @@ FOR student IN students\
 -   **internships**: internship\_id, company, students\_applied (список
     student\_id).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4047,9 +3974,6 @@ RETURN {\
 -   **language\_exchange**: exchange\_id, language,
     partner\_required\_language.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4095,9 +4019,6 @@ FOR student IN students\
 -   **students**: student\_id, name, enrollment\_status.
 -   **financial\_aid**: aid\_id, student\_id, amount, year.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4153,9 +4074,6 @@ enrollmentYear\
 -   **students**: student\_id, name, graduation\_year.
 -   **theses**: thesis\_id, student\_id, title, supervisor.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4205,9 +4123,6 @@ FOR student IN students\
 -   **scholarships**: scholarship\_id, name, eligible\_majors (список
     специальностей), amount.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4254,9 +4169,6 @@ FOR student IN students\
 -   **advanced\_courses**: course\_id, title, prerequisites (список
     course\_id).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4303,9 +4215,6 @@ FOR student IN students\
 -   **students**: student\_id, name, nationality.
 -   **cultural\_events**: event\_id, name, country, date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4346,9 +4255,6 @@ FOR student IN students\
 -   **honor\_**stependias: stependia\_id, name,
     minimum\_gpa.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4393,9 +4299,6 @@ FOR student IN students\
     course\_id).
 -   **exams**: exam\_id, course\_id, date, location.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4445,9 +4348,6 @@ FOR student IN students\
 -   **project\_teams**: team\_id, project\_name, required\_skills
     (список навыков).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4490,9 +4390,6 @@ FOR student IN students\
 -   **students**: student\_id, name, advisor\_id.
 -   **faculty**: faculty\_id, name, department.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4538,9 +4435,6 @@ FOR student IN students\
 -   **students**: student\_id, name, interests (список интересов).
 -   **workshops**: workshop\_id, topic, date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4585,9 +4479,6 @@ FOR student IN students\
 -   **students**: student\_id, name, participation\_points.
 -   **rewards**: reward\_id, name, required\_points.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4626,9 +4517,6 @@ FOR student IN students\
 -   **mentors**: mentor\_id, name, assigned\_students (список
     student\_id).
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4681,9 +4569,6 @@ FOR mentor IN mentors\
     рассылок).
 -   **email\_campaigns**: campaign\_id, type, subject, send\_date.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4723,9 +4608,6 @@ FOR student IN students\
 -   **students**: student\_id, name, transportation\_mode.
 -   **parking\_permits**: permit\_id, student\_id, valid\_until.
 
-Все текстовые поля коллекций предварительно индексируются и
-сохраняются в std::map в хост-подсистеме (например, путем автоинкремента
-индекса). В SPE передаются только индексы.
 
 **Задание:**
 
@@ -4815,7 +4697,7 @@ _Визуализация графа_ — это графическое пред
 
 * Далее выполняется ряд алгоритмов для определения свойств вершин и ребер. В практикуме используется алгоритм Дейкстры для поиска кратчайших путей, на основе которого рассчитывается центральность вершин. 
 
-* На следующем этапе происходит выделение групп вершин, входящих в так называемые сообществ: связность вершин внутри сообщества превосходит связность за его пределами. Примеры алгоритмов поиска сообществ представлены в примерах <a href="https://latex.bmstu.ru/gitlab/hackathon2023" target="_blank">Практикума</a>: <a href="https://latex.bmstu.ru/gitlab/hackathon2023/lab5" target="_blank">Пример 5</a> и <a href="https://latex.bmstu.ru/gitlab/hackathon2023/lab6" target="_blank">Пример 6</a>. 
+* На следующем этапе происходит выделение групп вершин, входящих в так называемые сообществ: связность вершин внутри сообщества превосходит связность за его пределами. Примеры алгоритмов поиска сообществ представлены в примерах <a href="https://latex.bmstu.ru/gitlab/hackathon" target="_blank">Практикума</a>: <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7" target="_blank">Пример 7. Примение jupyter ноутбука и языка python для визуализации графов</a> и <a href="https://latex.bmstu.ru/gitlab/hackathon/ex8" target="_blank">Пример 8. Анализ графов знаний</a>. 
 
 * Для каждого сообщества определяется область экрана для его размещения (алгоритмы глобального размещения, global placement).
 
@@ -4941,7 +4823,7 @@ _Визуализация графа_ — это графическое пред
 
 
 
-> Для упрощения синтаксиса описания структур и обращения к их полям мы используем шаблоны, описанные в файле <a href="https://latex.bmstu.ru/gitlab/lnh64_l0/sw-kernel-lib/-/blob/main/include/compose_keys.hxx" target="_blank">compose_keys.hxx</a>. Макрос объявления структуры выглядит следующим образом: ```#define STRUCT(name) struct name: _base_uint64_t<name>```. Шаблон структуры \_base_uint64\_t<name> позволяет описать 64 битное значение как беззнаковое целое стандартного типа uint64_t и разместить его в регистрах процессора, а не в оперативной памяти. Таким образом достигается большее быстродействие.  
+> Для упрощения синтаксиса описания структур и обращения к их полям мы используем шаблоны, описанные в файле <a href="https://latex.bmstu.ru/gitlab/lnh64_l0/sw-kernel-lib/-/blob/100bit/include/compose_keys.hxx" target="_blank">compose_keys.hxx</a>. Макрос объявления структуры выглядит следующим образом: ```#define STRUCT(name) struct name: _base_uint64_t<name>```. Шаблон структуры \_base_uint64\_t<name> позволяет описать 64 битное значение как беззнаковое целое стандартного типа uint64_t и разместить его в регистрах процессора, а не в оперативной памяти. Таким образом достигается большее быстродействие.  
 
 
 
@@ -5158,7 +5040,7 @@ _Визуализация графа_ — это графическое пред
 	``` Graph::Key{.index=BASE_IDX, .u=u}```
 
 
-Для упрощения разработки алгоритмов на графах, а также контроля корректности синтаксических конструкций работы с ядром lnh64 была разработана специализированное программное ядро, расширяющее функциональность библиотеки  <a href="https://latex.bmstu.ru/gitlab/hackathon2023/lab5/-/blob/main/sw-kernel/" target="_blank">Lnh64 L0</a>. По данной ссылке доступны дополнительные заголовочные и cpp файлы, в которых собраны шаблоны описаний типовых структур графа и различных сервисных структур (очередей, деревьев и т.д.), необходимых для обработки графов и их визуалиации. Описание структур приведено в файле <a href="https://latex.bmstu.ru/gitlab/hackathon2023/lab5/-/blob/main/sw-kernel/include/graph_iterators.hxx" target="_blank">graph_iterators.hxx</a>
+Для упрощения разработки алгоритмов на графах, а также контроля корректности синтаксических конструкций работы с ядром lnh64 была разработана специализированное программное ядро, расширяющее функциональность библиотеки  <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/sw-kernel/" target="_blank">Lnh64 L0</a>. По данной ссылке доступны дополнительные заголовочные и cpp файлы, в которых собраны шаблоны описаний типовых структур графа и различных сервисных структур (очередей, деревьев и т.д.), необходимых для обработки графов и их визуалиации. Описание структур приведено в файле <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/sw-kernel/include/graph_iterators.hxx" target="_blank">graph_iterators.hxx</a>
 
 Описание каждой из перечисленных ниже структур состоит из следующих секций:
 
@@ -6104,7 +5986,7 @@ G1.ins_async(Graph::Path_key{.u = start_virtex}, Graph::Shortest_path{.du = 0, .
 	ВСЕ ЦИКЛ ПОКА
 ``` 
 
-Указанный алгоритм определения центральности представлен в файле <a href="https://latex.bmstu.ru/gitlab/hackathon2023/lab5/-/blob/main/sw-kernel/src/dijkstra.cpp" target="_blank">dijkstra.cpp</a>.
+Указанный алгоритм определения центральности представлен в файле <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/sw-kernel/src/dijkstra.cpp" target="_blank">dijkstra.cpp</a>.
 
 <!--
 
@@ -6464,7 +6346,7 @@ else:
 del(gpc) 
 ```
 
-С кодом примера можно ознакомиться [тут](https://latex.bmstu.ru/gitlab/hackathon2023/lab4).
+С кодом примера можно ознакомиться [тут](https://latex.bmstu.ru/gitlab/hackathon/ex6).
 
 
 ## 4.6. Примеры создания и применения графов знаний
@@ -6550,7 +6432,7 @@ match VISUALIZATION:
 {:.image-caption}
 **Рисунок 24 — Визуализация на основе силового алгоритма Фрухтерамана-Рейнгольда**
 
-С кодом примера можно ознакомиться [тут](https://latex.bmstu.ru/gitlab/hackathon2023/lab5).
+С кодом примера можно ознакомиться [тут](https://latex.bmstu.ru/gitlab/hackathon/ex7).
 
 
 ### 4.6.2. Пример визуализации графа деБрюйна музыкального произведения
@@ -6609,7 +6491,7 @@ Track 0: Acoustic Guitar
 {:.image-caption}
 **Рисунок 26 — Выделение сообществ (тем музыкального произведения) и визуализация графа деБрюйна. И.С.Бах, Токата ре-минор BWV565**
 
-С кодом примера можно ознакомиться [тут](https://latex.bmstu.ru/gitlab/hackathon2023/lab6).
+С кодом примера можно ознакомиться [тут](https://latex.bmstu.ru/gitlab/hackathon/ex8).
 
 ## 4.7. Сборка и запуск примеров проектов 
 
@@ -6622,8 +6504,8 @@ Track 0: Acoustic Guitar
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon2023/lab4.git
-cd lab4
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex6.git
+cd ex6
 ```
 
 #### Сборка проекта
@@ -6660,7 +6542,7 @@ make clean
 * Спиральная матричная визуализация на основе [центральности](https://alexbmstu.github.io/2023/#442-%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0-%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8).
 * Визуализацию графа-решетки на основе [центральности](https://alexbmstu.github.io/2023/#442-%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0-%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8).
 
-Для выбора варианта визуализации используется параметр [VIZUALIZATION](https://latex.bmstu.ru/gitlab/hackathon2023/lab5/-/blob/main/lab5.ipynb?ref_type=heads)
+Для выбора варианта визуализации используется параметр [VIZUALIZATION](https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/lab5.ipynb?ref_type=heads)
 
 
 #### Установка
@@ -6668,11 +6550,11 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon2023/lab5.git
-cd lab5
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex7.git
+cd ex7
 ```
 
-Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab5.ipynb](https://latex.bmstu.ru/gitlab/hackathon2023/lab5/-/blob/main/lab5.ipynb?ref_type=heads)
+Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab5.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/lab5.ipynb?ref_type=heads)
 
 #### Сборка sw-kernel части проекта
 
@@ -6706,11 +6588,11 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon2023/lab6.git
-cd lab6
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex8.git
+cd ex8
 ```
 
-Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab6.ipynb](https://latex.bmstu.ru/gitlab/hackathon2023/lab6/-/blob/main/lab6.ipynb?ref_type=heads)
+Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab6.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex8/-/blob/main/lab6.ipynb?ref_type=heads)
 
 #### Сборка sw-kernel части проекта
 
@@ -6934,11 +6816,11 @@ done
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon2023/lab7.git
-cd lab7
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex9.git
+cd ex9
 ```
 
-Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab7.ipynb](https://latex.bmstu.ru/gitlab/hackathon2023/lab7/-/blob/main/lab7.ipynb?ref_type=heads)
+Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab7.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex9/-/blob/main/lab7.ipynb?ref_type=heads)
 
 ### 5.3.3. Зависимости
 
@@ -6984,7 +6866,7 @@ make clear
 
 Суть данного подхода в использовании для генерации одновременно двух различных графов - графа ритма и графа мелодии. В отличие от предыдущего метода, набор следующих друг за другом звуков получается посредством коротких проходов по данным графам с учетом большого количества параметров, таких как тональность, размер, предпочтительный темп и др. Таким образом генерируются короткие (длиной 1-2 музыкальных такта) ритмическо-мелодические последовательности, которые записываются в объекты класса "Мотив". Далее управление процессом генерации все больше переходит от непосредственно графов к иерархической структуре, построенной по принципам музыкальной формы. Последовательность из двух стоящих друг за другом "Мотивов" включается в объект класса "Фраза", представляющего собой, по сути, их обертку со своими методами управления музыкальной последовательностью. Точно так же "Фразы" включаются в "Предложения", "Предложения" в "Периоды", а "Периоды" в единую "Форму", повышая уровень абстракции с каждым иерархическим переходом.
 
-Подробно иерархический принцип работы описан в разделе 5.4.3. Инструкции и примеры работы приведены в блокнотах [GPC_music.ipynb](https://latex.bmstu.ru/gitlab/hackathon2023/lab8/-/blob/main/notebooks/GPC_music.ipynb?ref_type=heads) и [Composing.ipynb](https://latex.bmstu.ru/gitlab/hackathon2023/lab8/-/blob/main/notebooks/Composing.ipynb?ref_type=heads) в репозитории.
+Подробно иерархический принцип работы описан в разделе 5.4.3. Инструкции и примеры работы приведены в блокнотах [GPC_music.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex10/-/blob/main/notebooks/GPC_music.ipynb?ref_type=heads) и [Composing.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex10/-/blob/main/notebooks/Composing.ipynb?ref_type=heads) в репозитории.
 
 <img src="assets/phrase_gen_pipe.png" class="fullPic"/>
 
@@ -6996,8 +6878,8 @@ make clear
 Клонируйте репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon2023/lab8.git
-cd lab8
+git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex10.git
+cd ex10
 ```
 
 Выполните команду:
