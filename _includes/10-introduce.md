@@ -2099,10 +2099,14 @@ host/host_main sw-kernel/sw_kernel.rawbinary
 Результат работы теста:
 
 ```bash
-1,2,**100**,4,77
-10,20,30,40
-abcdefghijklmnop
-1234567890abcdef
+Open gpc on /dev/gpc0
+Rawbinary loaded from sw-kernel/sw_kernel.rawbinary
+КЛЮЧ:     1,2,100,4,77
+ЗНАЧЕНИЕ: 10,20,30,40
+Open gpc on /dev/gpc1
+Rawbinary loaded from sw-kernel/sw_kernel.rawbinary
+КЛЮЧ:     abcdefghijklmnopabcdefghijklmnopabcdefghijklmnopabcdefghijklmnopabcdefghijklmnopabcdefghijklmnop
+ЗНАЧЕНИЕ: 1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
 ```
 
 Пример демонстрирует, как посланный ключ большой размерности может быть сохранен в lnh64, и найден в нем с помощью команды nsm. При этом код sw_kernel меняет поле на значение 100, что демонстрируется в консольном выводе.
@@ -2112,6 +2116,102 @@ abcdefghijklmnop
 ```bash
 make clean
 ```
+
+## Пример вазиможействия в ядром gpc на python
+
+В файле [ex4.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex4/-/blob/main/ex4.ipynb?ref_type=heads) [примера 4](https://latex.bmstu.ru/gitlab/hackathon/ex4/) приведен пример кода, аналогичного программе на языке c++. Программа инициализирует gpc, после чего читает описание единых форматов структур в файле include/common_struct.h.
+
+Код вызова парсера заголовочного файла следующий:
+```python
+#Загрузить описание структур из common_struct файла
+common_struct_path=str(pth.Path().absolute()/"include/common_struct.h")
+# Загружаем объявления из заголовочного файла
+structs = gpc.read_struct_info(common_struct_path)
+# Для печати конкретной структуры
+print("\nДетальная информация о структурах:")
+gpc.print_struct_info(structs)
+```
+В итоге будет разобрано объявление упакованных структур, которыми обмениваются хост-подсистема и программное ядро:
+
+```bash
+Детальная информация о структурах:
+
+Структура: Key
+Поля вложенной структуры data:
+  k1: c_ulong (8 байт)
+  k2: c_ubyte (1 байт)
+  k3: c_ubyte (1 байт)
+  k4: c_ulong (8 байт)
+  k5: c_ulong (8 байт)
+
+Структура: Value
+Поля вложенной структуры data:
+  v1: c_ulong (8 байт)
+  v2: c_ubyte (1 байт)
+  v3: c_ubyte (1 байт)
+  v4: c_ulong (8 байт)
+
+Структура: KeyS
+Поля вложенной структуры data:
+  payload: c_char_Array_512 (512 байт)
+
+Структура: ValueS
+Поля вложенной структуры data:
+  payload: c_char_Array_512 (512 байт)
+```
+
+Информация используется для создания экземпляров классов `Key`,`Value`,`KeyS` и `ValueS`. При этом возможно задавать переменную длинну полей, что удобно для объявления строковых констант переменной длинны. 
+
+Объявление классов Python, соответствующих общим структурам выполняет следующим образом:
+
+```python
+#Создаем запись <Key,Value> фиксированной длины явным указанием полей
+#Key
+key = structs['Key']()
+key.k1 = 1
+key.k2 = 2
+key.k3 = 3
+key.k4 = 4
+key.k5 = 5
+#Value
+value = structs['Value']()
+value.v1 = 10
+value.v2 = 20
+value.v3 = 30
+value.v4 = 40
+
+# Создаем запись KeyS переменной длинны с явным заданием длины
+keys = structs['KeyS']()
+k = b"Large key buffer ........................!"
+keys.payload = k
+# Явное задание длины поля
+keys.size = len(k) 
+```
+
+Другой вариант создания поля использует максимальную длину, что может быть нежелеательно. Кроме того, на хранение такого поля будет затрачено больше ресурсов gpc: 
+
+```Python
+# Создаем запись ValueS переменной длинны с максимальной длинной (512)
+values = structs['ValueS']()
+values.payload = b"Large value buffer ....................................!"
+# При keys.size==0 размер поля данных принимается максимальным (512).
+
+# Прием KeyS
+received_keys = gpc.mq_receive_struct(structs['KeyS'])
+print(f"Received KeyS[{received_keys.size}]: {bytes(received_keys.payload)}")
+# Прием ValueS
+received_values = gpc.mq_receive_struct(structs['ValueS'])
+print(f"Received ValueS[{received_values.size}]: {bytes(received_values.payload)}")
+```
+
+В итоге будет получен результат с размерами, соответствующими первоначальным:
+
+```bash
+Received KeyS[42]: b'*arge key buffer ........................!'
+Received ValueS[512]: b'Large value buffer ....................................!'
+```
+
+
 
 ## 3.8. Индивидуальные задания 
 
