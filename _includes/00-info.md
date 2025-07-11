@@ -29,3 +29,22 @@
 <a href="https://github.com/alexbmstu/2023/blob/master/docs/pr2023.pdf" target="_blank">Вступительная презентация</a>
 
 
+## *Результаты практикума и победители*
+
+### 1-я премия 
+
+**Down into the valley**
+
+<audio controls>
+  <source src="data/Down into the valley.wav" type="audio/wav">
+</audio>
+
+
+### 2-я премия 
+
+**Озарение**
+
+<audio controls>
+  <source src="data/Insight.mp3" type="audio/mpeg">
+</audio>
+
