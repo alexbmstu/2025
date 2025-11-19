@@ -1748,7 +1748,7 @@ user@dl580:~$ lnh_nfo
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex1/ex1.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex1/ex1.git
 cd ex1
 ```
 
@@ -1799,7 +1799,7 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex2/ex2.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex2/ex2.git
 cd ex2
 ```
 
@@ -1858,7 +1858,7 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex3.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex3.git
 cd ex3
 ```
 
@@ -2072,7 +2072,7 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex4.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex4.git
 cd ex4
 ```
 
@@ -6604,7 +6604,7 @@ Track 0: Acoustic Guitar
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex6.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex6.git
 cd ex6
 ```
 
@@ -6650,7 +6650,7 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex7.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex7.git
 cd ex7
 ```
 
@@ -6688,7 +6688,7 @@ make clean
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex8.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex8.git
 cd ex8
 ```
 
@@ -6916,7 +6916,7 @@ done
 Для установки требуется рекурсивно клонировать репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex9.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex9.git
 cd ex9
 ```
 
@@ -6978,7 +6978,7 @@ make clear
 Клонируйте репозиторий:
 
 ```bash
-git clone --recursive https://latex.bmstu.ru/gitlab/hackathon/ex10.git
+git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex10.git
 cd ex10
 ```
 
