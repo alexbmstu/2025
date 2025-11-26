@@ -2458,7 +2458,7 @@ Rawbinary loaded from sw-kernel/sw_kernel.rawbinary
 make clean
 ```
 
-В файле [ex4.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex4/-/blob/main/ex4.ipynb?ref_type=heads) [примера 4](https://latex.bmstu.ru/gitlab/hackathon/ex4/) приведен пример кода, аналогичного программе на языке c++. Программа инициализирует gpc, после чего читает описание единых форматов структур в файле include/common_struct.h.
+В файле [ex4.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex4/-/blob/little_endian_longkeys_100bit/ex4.ipynb?ref_type=heads) [примера 4](https://latex.bmstu.ru/gitlab/hackathon/ex4/) приведен пример кода, аналогичного программе на языке c++. Программа инициализирует gpc, после чего читает описание единых форматов структур в файле include/common_struct.h.
 
 Код вызова парсера заголовочного файла следующий:
 ```python
@@ -5466,7 +5466,7 @@ _Визуализация графа_ — это графическое пред
 	``` Graph::Key{.index=BASE_IDX, .u=u}```
 
 
-Для упрощения разработки алгоритмов на графах, а также контроля корректности синтаксических конструкций работы с ядром lnh64 была разработана специализированное программное ядро, расширяющее функциональность библиотеки  <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/sw-kernel/" target="_blank">Lnh64 L0</a>. По данной ссылке доступны дополнительные заголовочные и cpp файлы, в которых собраны шаблоны описаний типовых структур графа и различных сервисных структур (очередей, деревьев и т.д.), необходимых для обработки графов и их визуалиации. Описание структур приведено в файле <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/sw-kernel/include/graph_iterators.hxx" target="_blank">graph_iterators.hxx</a>
+Для упрощения разработки алгоритмов на графах, а также контроля корректности синтаксических конструкций работы с ядром lnh64 была разработана специализированное программное ядро, расширяющее функциональность библиотеки  <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/tree/64bit_library_on_100bit_card_dma/sw-kernel?ref_type=heads" target="_blank">Lnh64 L0</a>. По данной ссылке доступны дополнительные заголовочные и cpp файлы, в которых собраны шаблоны описаний типовых структур графа и различных сервисных структур (очередей, деревьев и т.д.), необходимых для обработки графов и их визуалиации. Описание структур приведено в файле <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/64bit_library_on_100bit_card_dma/sw-kernel/include/graph_iterators.hxx?ref_type=heads" target="_blank">graph_iterators.hxx</a>
 
 Описание каждой из перечисленных ниже структур состоит из следующих секций:
 
@@ -6412,7 +6412,7 @@ G1.ins_async(Graph::Path_key{.u = start_virtex}, Graph::Shortest_path{.du = 0, .
 	ВСЕ ЦИКЛ ПОКА
 ``` 
 
-Указанный алгоритм определения центральности представлен в файле <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/sw-kernel/src/dijkstra.cpp" target="_blank">dijkstra.cpp</a>.
+Указанный алгоритм определения центральности представлен в файле <a href="https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/64bit_library_on_100bit_card_dma/sw-kernel/src/dijkstra.cpp?ref_type=heads" target="_blank">dijkstra.cpp</a>.
 
 <!--
 
@@ -6968,7 +6968,7 @@ make clean
 * Спиральная матричная визуализация на основе [центральности](https://alexbmstu.github.io/2023/#442-%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0-%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8).
 * Визуализацию графа-решетки на основе [центральности](https://alexbmstu.github.io/2023/#442-%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0-%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8).
 
-Для выбора варианта визуализации используется параметр [VIZUALIZATION](https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/lab5.ipynb?ref_type=heads)
+Для выбора варианта визуализации используется параметр [VIZUALIZATION](https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/64bit_library_on_100bit_card_dma/ex7.ipynb?ref_type=heads)
 
 
 #### Установка
@@ -6980,7 +6980,7 @@ git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex7.git
 cd ex7
 ```
 
-Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab5.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/main/lab5.ipynb?ref_type=heads)
+Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab5.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex7/-/blob/64bit_library_on_100bit_card_dma/ex7.ipynb?ref_type=heads)
 
 #### Сборка sw-kernel части проекта
 
@@ -7018,7 +7018,7 @@ git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex8.git
 cd ex8
 ```
 
-Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab6.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex8/-/blob/main/lab6.ipynb?ref_type=heads)
+Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [ex6.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex8/-/blob/64bit_library_on_100bit_card_dma/ex8.ipynb?ref_type=heads)
 
 #### Сборка sw-kernel части проекта
 
@@ -7033,7 +7033,7 @@ make
 
 #### Запуск проекта
 
-Заупуск проекта осуществляется в ноутбуке lab6.ipynb. Исходные midi файлы должны быть помещены в папку data/midi_sources/
+Заупуск проекта осуществляется в ноутбуке ex6.ipynb. Исходные midi файлы должны быть помещены в папку data/midi_sources/
 
 #### Очистка проекта
 
@@ -7246,7 +7246,7 @@ git clone --recurse-submodules https://latex.bmstu.ru/gitlab/hackathon/ex9.git
 cd ex9
 ```
 
-Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [lab7.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex9/-/blob/main/lab7.ipynb?ref_type=heads)
+Далее в облаке [devlab.bmstu.ru](https://devlab.bmstu.ru) необходимо открыть файл [ex9.ipynb](https://latex.bmstu.ru/gitlab/hackathon/ex9/-/blob/64bit_library_on_100bit_card_dma/ex9.ipynb?ref_type=heads)
 
 ### 5.3.3. Зависимости
 
